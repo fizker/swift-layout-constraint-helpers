@@ -1,7 +1,7 @@
 import XCTest
 
-import SwiftLayoutConstraintHelpersTests
+import LayoutConstraintHelpersTests
 
 var tests = [XCTestCaseEntry]()
-tests += SwiftLayoutConstraintHelpersTests.allTests()
+tests += LayoutConstraintHelpersTests.allTests()
 XCTMain(tests)

@@ -2,7 +2,36 @@ import XCTest
 import LayoutConstraintHelpers
 
 final class PublicAPITests: XCTestCase {
-	func testExample() {
+	func inits() {
+		#if canImport(UIKit)
+		let view = UIView()
+		#elseif canImport(AppKit)
+		let view = NSView()
+		#endif
+
+		_ = NSLayoutConstraint(setting: .width, of: view, to: 5)
+		_ = NSLayoutConstraint(setting: .width, of: view, to: 5, relation: .equal)
+		_ = NSLayoutConstraint(setting: .width, of: view, to: 5, multiplier: 1)
+		_ = NSLayoutConstraint(setting: .width, of: view, to: 5, relation: .equal, multiplier: 1)
+
+		_ = NSLayoutConstraint(for: .width, of: view, matching: view)
+		_ = NSLayoutConstraint(for: .width, of: view, matching: view, relation: .equal)
+		_ = NSLayoutConstraint(for: .width, of: view, matching: view, multiplier: 1)
+		_ = NSLayoutConstraint(for: .width, of: view, matching: view, relation: .equal, multiplier: 1)
+		_ = NSLayoutConstraint(for: .width, of: view, matching: view, relation: .equal, constant: 0)
+		_ = NSLayoutConstraint(for: .width, of: view, matching: view, multiplier: 1, constant: 0)
+		_ = NSLayoutConstraint(for: .width, of: view, matching: view, relation: .equal, multiplier: 1, constant: 0)
+
+		_ = NSLayoutConstraint(linking: .width, of: view, to: .height, of: view)
+		_ = NSLayoutConstraint(linking: .width, of: view, to: .height, of: view, constant: 0)
+		_ = NSLayoutConstraint(linking: .width, of: view, to: .height, of: view, multiplier: 1)
+		_ = NSLayoutConstraint(linking: .width, of: view, to: .height, of: view, relation: .equal)
+		_ = NSLayoutConstraint(linking: .width, of: view, to: .height, of: view, relation: .equal, constant: 0)
+		_ = NSLayoutConstraint(linking: .width, of: view, to: .height, of: view, relation: .equal, multiplier: 1)
+		_ = NSLayoutConstraint(linking: .width, of: view, to: .height, of: view, multiplier: 1, constant: 0)
+		_ = NSLayoutConstraint(linking: .width, of: view, to: .height, of: view, relation: .equal, multiplier: 1, constant: 0)
+	}
+	func viewExtensions() {
 		#if canImport(UIKit)
 		let view = UIView()
 		#elseif canImport(AppKit)
@@ -41,6 +70,7 @@ final class PublicAPITests: XCTestCase {
 	}
 
 	static var allTests = [
-		("testExample", testExample),
+		("inits", inits),
+		("viewExtensions", viewExtensions),
 	]
 }
