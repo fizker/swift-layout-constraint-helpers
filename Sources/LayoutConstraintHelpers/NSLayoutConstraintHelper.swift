@@ -42,8 +42,8 @@ extension NSLayoutConstraintHelper {
 	/// - Returns: The necessary constraints to represent both width and height.
 	public func constraints(for size: CGSize) -> [NSLayoutConstraint] {
 		return [
-			constraint(linking: .width, to: size.width),
-			constraint(linking: .height, to: size.height),
+			constraint(setting: .width, to: size.width),
+			constraint(setting: .height, to: size.height),
 		]
 	}
 
@@ -90,7 +90,7 @@ extension NSLayoutConstraintHelper {
 	/// - Parameter multiplier: The multiplier for the value. Defaults to `1.0`.
 	/// - Returns: An `NSLayoutConstraint` matching the given criteria.
 	public func constraint(
-		linking attribute: NSLayoutConstraint.Attribute,
+		setting attribute: NSLayoutConstraint.Attribute,
 		to constant: CGFloat,
 		relation: NSLayoutConstraint.Relation = .equal,
 		multiplier: CGFloat = 1
@@ -139,8 +139,8 @@ extension NSLayoutConstraintHelper {
 	/// - Parameter constant: The constant value for the constraint. Defaults to `0`.
 	/// - Returns: An `NSLayoutConstraint` matching the given criteria.
 	public func constraint(
-		linking attribute: NSLayoutConstraint.Attribute,
-		to view: View,
+		for attribute: NSLayoutConstraint.Attribute,
+		matching view: View,
 		relation: NSLayoutConstraint.Relation = .equal,
 		multiplier: CGFloat = 1,
 		constant: CGFloat = 0
