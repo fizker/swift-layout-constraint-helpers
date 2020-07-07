@@ -39,11 +39,12 @@ extension NSView: NSLayoutConstraintHelper {
 extension NSLayoutConstraintHelper {
 	/// Creates constraints for enforcing width and height to match the size in the given `CGSize`.
 	/// - Parameter size: `CGSize` describing the wanted width and height.
+	/// - Parameter priority: The priority of the constraint. Defaults to `.required`.
 	/// - Returns: The necessary constraints to represent both width and height.
-	public func constraints(for size: CGSize) -> [NSLayoutConstraint] {
+	public func constraints(for size: CGSize, priority: NSLayoutConstraint.Priority = .required) -> [NSLayoutConstraint] {
 		return [
-			constraint(setting: .width, to: size.width),
-			constraint(setting: .height, to: size.height),
+			constraint(setting: .width, to: size.width, priority: priority),
+			constraint(setting: .height, to: size.height, priority: priority),
 		]
 	}
 
@@ -55,9 +56,10 @@ extension NSLayoutConstraintHelper {
 	/// let constraint = constraintForAspectRatio(aspectRatio4_3)
 	/// ```
 	/// - Parameter size: A `CGSize` with the wanted aspect ratio.
+	/// - Parameter priority: The priority of the constraint. Defaults to `.required`.
 	/// - Returns: An `NSLayoutConstraint` enforcing the aspect ratio.
-	public func constraintForAspectRatio(_ size: CGSize) -> NSLayoutConstraint {
-		return constraintForAspectRatio(width: size.width, height: size.height)
+	public func constraintForAspectRatio(_ size: CGSize, priority: NSLayoutConstraint.Priority = .required) -> NSLayoutConstraint {
+		return constraintForAspectRatio(width: size.width, height: size.height, priority: priority)
 	}
 
 	/// Returns a constraint that enforces the same aspect ratio as the given `CGSize`.
@@ -69,17 +71,24 @@ extension NSLayoutConstraintHelper {
 	///
 	/// - Parameter width: The width aspect of the aspect ratio.
 	/// - Parameter height: The height aspect of the aspect ratio.
+	/// - Parameter priority: The priority of the constraint. Defaults to `.required`.
 	/// - Returns: An `NSLayoutConstraint` enforcing the aspect ratio.
-	public func constraintForAspectRatio(width: CGFloat, height: CGFloat) -> NSLayoutConstraint {
+	public func constraintForAspectRatio(
+		width: CGFloat,
+		height: CGFloat,
+		priority: NSLayoutConstraint.Priority = .required
+	) -> NSLayoutConstraint {
 		let factor = width / height
 
-		return NSLayoutConstraint(
+		let c = NSLayoutConstraint(
 			item: self, attribute: .width,
 			relatedBy: .equal,
 			toItem: self, attribute: .height,
 			multiplier: factor,
 			constant: 0
 		)
+		c.priority = priority
+		return c
 	}
 
 	/// Creates an `NSLayoutConstraint` that binds an attribute on this view to a constant value.
@@ -88,20 +97,24 @@ extension NSLayoutConstraintHelper {
 	/// - Parameter constant: The constant value.
 	/// - Parameter relation: The relation for the value. Defaults to `.equal`.
 	/// - Parameter multiplier: The multiplier for the value. Defaults to `1.0`.
+	/// - Parameter priority: The priority of the constraint. Defaults to `.required`.
 	/// - Returns: An `NSLayoutConstraint` matching the given criteria.
 	public func constraint(
 		setting attribute: NSLayoutConstraint.Attribute,
 		to constant: CGFloat,
 		relation: NSLayoutConstraint.Relation = .equal,
-		multiplier: CGFloat = 1
+		multiplier: CGFloat = 1,
+		priority: NSLayoutConstraint.Priority = .required
 	) -> NSLayoutConstraint
 	{
-		return NSLayoutConstraint(
+		let c = NSLayoutConstraint(
 			item: self, attribute: attribute,
 			relatedBy: relation,
 			toItem: nil, attribute: attribute,
 			multiplier: multiplier, constant: constant
 		)
+		c.priority = priority
+		return c
 	}
 
 	/// Creates an `NSLayoutConstraint` between the given attribute of this view and the specified attributes of the specified view.
@@ -112,6 +125,7 @@ extension NSLayoutConstraintHelper {
 	/// - Parameter relation: The relation for the value. Defaults to `.equal`.
 	/// - Parameter multiplier: The multiplier for the value. Defaults to `1.0`.
 	/// - Parameter constant: The constant value for the constraint. Defaults to `0`.
+	/// - Parameter priority: The priority of the constraint. Defaults to `.required`.
 	/// - Returns: An `NSLayoutConstraint` matching the given criteria.
 	public func constraint(
 		linking attribute: NSLayoutConstraint.Attribute,
@@ -119,15 +133,18 @@ extension NSLayoutConstraintHelper {
 		of view: View,
 		relation: NSLayoutConstraint.Relation = .equal,
 		multiplier: CGFloat = 1,
-		constant: CGFloat = 0
+		constant: CGFloat = 0,
+		priority: NSLayoutConstraint.Priority = .required
 	) -> NSLayoutConstraint
 	{
-		return NSLayoutConstraint(
+		let c = NSLayoutConstraint(
 			item: self, attribute: attribute,
 			relatedBy: relation,
 			toItem: view, attribute: otherAttribute,
 			multiplier: multiplier, constant: constant
 		)
+		c.priority = priority
+		return c
 	}
 
 	/// Creates an `NSLayoutConstraint` between the given attribute of this view and the specified view.
@@ -137,13 +154,15 @@ extension NSLayoutConstraintHelper {
 	/// - Parameter relation: The relation for the value. Defaults to `.equal`.
 	/// - Parameter multiplier: The multiplier for the value. Defaults to `1.0`.
 	/// - Parameter constant: The constant value for the constraint. Defaults to `0`.
+	/// - Parameter priority: The priority of the constraint. Defaults to `.required`.
 	/// - Returns: An `NSLayoutConstraint` matching the given criteria.
 	public func constraint(
 		for attribute: NSLayoutConstraint.Attribute,
 		matching view: View,
 		relation: NSLayoutConstraint.Relation = .equal,
 		multiplier: CGFloat = 1,
-		constant: CGFloat = 0
+		constant: CGFloat = 0,
+		priority: NSLayoutConstraint.Priority = .required
 	) -> NSLayoutConstraint
 	{
 		return constraint(

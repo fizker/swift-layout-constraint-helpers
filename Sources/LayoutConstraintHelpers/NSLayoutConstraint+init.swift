@@ -7,16 +7,22 @@ import AppKit
 public extension NSLayoutConstraint {
 	#if canImport(UIKit)
 	typealias View = UIView
+
+	// This normalises to AppKit variant and to the other properties (Attribute, Relation)
+	typealias Priority = UILayoutPriority
+
 	#elseif canImport(AppKit)
 	typealias View = NSView
 	#endif
 
 	convenience init(
-		setting attribute: NSLayoutConstraint.Attribute,
+		setting attribute: Attribute,
 		of view: View,
 		to constant: CGFloat,
-		relation: NSLayoutConstraint.Relation = .equal,
-		multiplier: CGFloat = 1
+		relation: Relation = .equal,
+		multiplier: CGFloat = 1,
+		priority: Priority = .required,
+		isActive: Bool = true
 	) {
 		self.init(
 			item: view, attribute: attribute,
@@ -24,6 +30,8 @@ public extension NSLayoutConstraint {
 			toItem: nil, attribute: attribute,
 			multiplier: multiplier, constant: constant
 		)
+		self.priority = priority
+		self.isActive = isActive
 	}
 
 	convenience init(
@@ -33,7 +41,9 @@ public extension NSLayoutConstraint {
 		of otherView: View,
 		relation: Relation = .equal,
 		multiplier: CGFloat = 1,
-		constant: CGFloat = 0
+		constant: CGFloat = 0,
+		priority: Priority = .required,
+		isActive: Bool = true
 	) {
 		self.init(
 			item: view, attribute: attribute,
@@ -41,6 +51,8 @@ public extension NSLayoutConstraint {
 			toItem: otherView, attribute: otherAttribute,
 			multiplier: multiplier, constant: constant
 		)
+		self.priority = priority
+		self.isActive = isActive
 	}
 
 	convenience init(
@@ -49,13 +61,16 @@ public extension NSLayoutConstraint {
 		matching otherView: View,
 		relation: Relation = .equal,
 		multiplier: CGFloat = 1,
-		constant: CGFloat = 0
+		constant: CGFloat = 0,
+		priority: Priority = .required,
+		isActive: Bool = true
 	) {
 		self.init(
-			item: view, attribute: attribute,
-			relatedBy: relation,
-			toItem: otherView, attribute: attribute,
-			multiplier: multiplier, constant: constant
+			linking: attribute, of: view,
+			to: attribute, of: otherView,
+			relation: relation,
+			multiplier: multiplier, constant: constant,
+			priority: priority, isActive: isActive
 		)
 	}
 }
