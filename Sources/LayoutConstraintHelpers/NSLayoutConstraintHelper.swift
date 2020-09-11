@@ -29,6 +29,10 @@ public protocol NSLayoutConstraintHelper {
 extension UIView: NSLayoutConstraintHelper {
 	public typealias View = UIView
 }
+
+extension UILayoutGuide: NSLayoutConstraintHelper {
+	public typealias View = UIView
+}
 #endif
 #if canImport(AppKit)
 extension NSView: NSLayoutConstraintHelper {
@@ -174,3 +178,67 @@ extension NSLayoutConstraintHelper {
 		)
 	}
 }
+
+#if canImport(UIKit)
+@available(iOS 9.0, *)
+extension NSLayoutConstraintHelper {
+	/// Creates an `NSLayoutConstraint` between the given attribute of this view and the specified attributes of the specified view.
+	///
+	/// - Parameter attribute: The attribute of the current view.
+	/// - Parameter otherAttribute: The attribute of the other view.
+	/// - Parameter layoutGuide: The other layout guide.
+	/// - Parameter relation: The relation for the value. Defaults to `.equal`.
+	/// - Parameter multiplier: The multiplier for the value. Defaults to `1.0`.
+	/// - Parameter constant: The constant value for the constraint. Defaults to `0`.
+	/// - Parameter priority: The priority of the constraint. Defaults to `.required`.
+	/// - Returns: An `NSLayoutConstraint` matching the given criteria.
+	public func constraint(
+		linking attribute: NSLayoutConstraint.Attribute,
+		to otherAttribute: NSLayoutConstraint.Attribute,
+		of layoutGuide: UILayoutGuide,
+		relation: NSLayoutConstraint.Relation = .equal,
+		multiplier: CGFloat = 1,
+		constant: CGFloat = 0,
+		priority: NSLayoutConstraint.Priority = .required,
+		isActive: Bool = true
+	) -> NSLayoutConstraint
+	{
+		let c = NSLayoutConstraint(
+			item: self, attribute: attribute,
+			relatedBy: relation,
+			toItem: layoutGuide, attribute: otherAttribute,
+			multiplier: multiplier, constant: constant
+		)
+		c.priority = priority
+		c.isActive = isActive
+		return c
+	}
+
+	/// Creates an `NSLayoutConstraint` between the given attribute of this view and the specified view.
+	///
+	/// - Parameter attribute: The attribute in question.
+	/// - Parameter layoutGuide: The other layout guide.
+	/// - Parameter relation: The relation for the value. Defaults to `.equal`.
+	/// - Parameter multiplier: The multiplier for the value. Defaults to `1.0`.
+	/// - Parameter constant: The constant value for the constraint. Defaults to `0`.
+	/// - Parameter priority: The priority of the constraint. Defaults to `.required`.
+	/// - Returns: An `NSLayoutConstraint` matching the given criteria.
+	public func constraint(
+		for attribute: NSLayoutConstraint.Attribute,
+		matching layoutGuide: UILayoutGuide,
+		relation: NSLayoutConstraint.Relation = .equal,
+		multiplier: CGFloat = 1,
+		constant: CGFloat = 0,
+		priority: NSLayoutConstraint.Priority = .required
+	) -> NSLayoutConstraint
+	{
+		return constraint(
+			linking: attribute,
+			to: attribute, of: layoutGuide,
+			relation: relation,
+			multiplier: multiplier,
+			constant: constant
+		)
+	}
+}
+#endif
